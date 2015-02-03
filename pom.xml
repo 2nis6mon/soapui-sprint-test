@@ -180,45 +180,6 @@
 			<artifactId>soapui-pro</artifactId>
 			<version>4.6.1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>opencsv</groupId>
-			<artifactId>opencsv</artifactId>
-			<version>1.8</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>annotations</artifactId>
-			<version>2.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>2.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>4.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>net-components</groupId>
-			<artifactId>netcomponents</artifactId>
-			<version>1.3.8a</version>
-		</dependency>
-		<dependency>
-			<groupId>idw</groupId>
-			<artifactId>idw</artifactId>
-			<version>1.6.1</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.jexcelapi</groupId>
-			<artifactId>jxl</artifactId>
-			<version>2.6.12</version>
-		</dependency>
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
