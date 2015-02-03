@@ -1,0 +1,235 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<version>4.6.1</version>
+	<groupId>com.smartbear.soapui</groupId>
+	<artifactId>soapui-spring-test</artifactId>
+	<name>SoapUI Spring Test</name>
+	<packaging>jar</packaging>
+
+	<repositories>
+		<repository>
+			<id>Commande Unique Repository Releases</id>
+			<url>http://nexus-softcu.si.francetelecom.fr/nexus/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>Commande Unique Repository Snapshots</id>
+			<url>http://nexus-softcu.si.francetelecom.fr/nexus/content/repositories/snapshots</url>
+		</repository>
+		<repository>
+			<id>RD Repository Releases</id>
+			<url>http://maven2.rd.francetelecom.fr/proxy/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>thirdparty</id>
+			<url>http://nexus-softcu.si.francetelecom.fr/nexus/content/repositories/thirdparty</url>
+		</repository>
+		<repository>
+			<id>inhouse</id>
+			<url>http://maven2.rd.francetelecom.fr/proxy/content/repositories/inhouse</url>
+		</repository>
+		<repository>
+			<id>inhouse.snapshot</id>
+			<url>http://maven2.rd.francetelecom.fr/proxy/content/repositories/inhouse.snapshot</url>
+		</repository>
+		<repository>
+			<id>soapui maven</id>
+			<url>http://www.soapui.org/repository/maven2</url>
+		</repository>
+		<repository>
+			<id>central maven</id>
+			<url>http://central.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>eviware</id>
+			<url>http://www.eviware.com/repository/maven2/</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>Commande Unique Repository</id>
+			<url>http://nexus-softcu.si.francetelecom.fr/nexus/content/groups/public</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>Commande Unique Repository Snapshots</id>
+			<url>http://nexus-softcu.si.francetelecom.fr/nexus/content/repositories/snapshots</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>RD Repository</id>
+			<url>http://maven2.rd.francetelecom.fr/proxy/repository/public</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>thirdparty</id>
+			<url>http://nexus-softcu.si.francetelecom.fr/nexus/content/repositories/thirdparty</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>soapui maven</id>
+			<url>http://www.soapui.org/repository/maven2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>central maven</id>
+			<url>http://central.maven.org/maven2</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://dvdsi400w.intranet-paris.francetelecom.fr:8081/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://dvdsi400w.intranet-paris.francetelecom.fr:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.smartbear.soapui</groupId>
+			<artifactId>soapui</artifactId>
+			<version>4.6.1</version>
+			<exclusions>
+
+				<!-- These are mainly GUI artifacts not needed in the headless test runner -->
+				<!-- TODO We might also want to remove: fife:rsyntaxtextarea. It's included 
+					in prior versions (< 4.5.2) though -->
+
+				<!-- Team dev -->
+
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>jxbrowser</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>comfyj</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>winpack</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>xulrunner-windows</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>xulrunner-linux64</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>xulrunner-linux</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>xulrunner-mac</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>MozillaInterfaces</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>engine-gecko</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>engine-gecko15</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>engine-ie</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>engine-webkit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>jniwrap</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>xulrunner15-mac</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>teamdev</groupId>
+					<artifactId>xulrunner15-windows</artifactId>
+				</exclusion>
+
+				<!-- JGoodies -->
+
+				<exclusion>
+					<groupId>com.jgoodies</groupId>
+					<artifactId>forms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.jgoodies</groupId>
+					<artifactId>binding</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.smartbear.soapui</groupId>
+			<artifactId>soapui-pro</artifactId>
+			<version>4.6.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>1.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>4.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net-components</groupId>
+			<artifactId>netcomponents</artifactId>
+			<version>1.3.8a</version>
+		</dependency>
+		<dependency>
+			<groupId>idw</groupId>
+			<artifactId>idw</artifactId>
+			<version>1.6.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.1.2.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.9-RC1</version>
+		</dependency>
+	</dependencies>
+
+</project>
