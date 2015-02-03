@@ -19,26 +19,17 @@ import com.google.common.collect.Collections2;
 
 public class SoapUiTestSuiteProvider {
 
-	private final Class<?> generatedTestClass;
-	private final Class<?> superClassTest;
+	private final Class<? extends SoapUiSpringTest> generatedTestClass;
 	private final List<Method> generatedTestMethods;
 	private final List<SoapUiTestCase> allTests;
 	private final WsdlProjectPro project;
 
-	public SoapUiTestSuiteProvider(Class<?> clazz) {
+	public SoapUiTestSuiteProvider(Class<? extends SoapUiSpringTest> clazz) {
 		try {
 
-			SoapUiProject soapUiProjectAnnotation = SoapUiSpringTestUtils.getAnnotation(clazz, SoapUiProject.class);
+			project = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
+			allTests = SoapUiSpringTestUtils.getSoapUiTestCases(project);
 
-			if (soapUiProjectAnnotation == null) {
-				throw new SoapUiSpringTestException("Missing annotation \'@" + SoapUiProject.class.getSimpleName() + "\' on class ["
-						+ clazz.getName() + "]");
-			}
-
-			project = SoapUiSpringTestUtils.crateWsdlProjectPro(clazz);
-			allTests = SoapUiSpringTestUtils.suite(project);
-
-			superClassTest = clazz;
 			generatedTestClass = generateSoapUiProjectTestClass(clazz, allTests);
 			generatedTestMethods = getSoapUiProjectTestClassMethods(generatedTestClass, allTests);
 
@@ -51,7 +42,9 @@ public class SoapUiTestSuiteProvider {
 		}
 	}
 
-	static Class<?> generateSoapUiProjectTestClass(Class<?> superClazz, List<SoapUiTestCase> allTests) throws Exception {
+	@SuppressWarnings("unchecked")
+	static Class<? extends SoapUiSpringTest> generateSoapUiProjectTestClass(Class<? extends SoapUiSpringTest> superClazz,
+			List<SoapUiTestCase> allTests) throws Exception {
 
 		ClassPool pool = ClassPool.getDefault();
 		CtClass newClazz = pool.makeClass(superClazz.getName() + ".generated" + System.nanoTime());
@@ -63,7 +56,7 @@ public class SoapUiTestSuiteProvider {
 			newClazz.addMethod(m);
 		}
 
-		Class<?> generatedTestClass = newClazz.toClass(ClassLoader.getSystemClassLoader(), null);
+		Class<? extends SoapUiSpringTest> generatedTestClass = newClazz.toClass(ClassLoader.getSystemClassLoader(), null);
 
 		return generatedTestClass;
 	}
@@ -90,14 +83,9 @@ public class SoapUiTestSuiteProvider {
 	}
 
 	public Object newTestClassInstance() throws Exception {
-		Object testInstance = generatedTestClass.newInstance();
-		if (testInstance instanceof SoapUiSpringTest) {
-			SoapUiSpringTest test = (SoapUiSpringTest) testInstance;
-			test.setReader(this);
-			return test;
-		}
-		throw new SoapUiSpringTestException("Class " + superClassTest.getCanonicalName() + " must extends "
-				+ SoapUiSpringTest.class.getCanonicalName());
+		SoapUiSpringTest testInstance = generatedTestClass.newInstance();
+		testInstance.setReader(this);
+		return testInstance;
 	}
 
 	public SoapUiTestCase getTest(final String id, final Map<String, String> properties) throws Throwable {

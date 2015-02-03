@@ -16,10 +16,11 @@ public class SoapUiSpringTestRunner extends SpringJUnit4ClassRunner {
 		super(klass);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected List<FrameworkMethod> computeTestMethods() {
 		if (soapUiTestProvider == null) {
-			soapUiTestProvider = new SoapUiTestSuiteProvider(this.getTestClass().getJavaClass());
+			soapUiTestProvider = new SoapUiTestSuiteProvider((Class<? extends SoapUiSpringTest>) this.getTestClass().getJavaClass());
 		}
 		List<FrameworkMethod> list = new ArrayList<FrameworkMethod>();
 		for (Method testMethod : soapUiTestProvider.getTestMethods()) {

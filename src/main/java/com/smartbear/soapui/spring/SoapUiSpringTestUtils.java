@@ -2,9 +2,7 @@ package com.smartbear.soapui.spring;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,16 +18,12 @@ public class SoapUiSpringTestUtils {
 	public static final String PREFIX = "projectFile_";
 	public static final String SUFFIX = ".xml";
 
-	public static WsdlProjectPro crateWsdlProjectPro(Class<?> klass) {
+	public static WsdlProjectPro createWsdlProjectPro(Class<?> klass) {
 		File tmpFile = getProjectFile(klass);
-		if (tmpFile == null) {
-			throw new SoapUiSpringTestException("Error loading project file");
-		}
-
 		return new WsdlProjectPro(tmpFile.getAbsolutePath());
 	}
 
-	public static List<SoapUiTestCase> suite(WsdlProjectPro project) {
+	public static List<SoapUiTestCase> getSoapUiTestCases(WsdlProjectPro project) {
 
 		List<SoapUiTestCase> suite = new ArrayList<SoapUiTestCase>();
 
@@ -68,16 +62,21 @@ public class SoapUiSpringTestUtils {
 	private static File getProjectFile(Class<?> testClass) {
 		InputStream in = null;
 		FileOutputStream out = null;
+		SoapUiProject soapUiProjectAnnotation = testClass.getAnnotation(SoapUiProject.class);
+		if (soapUiProjectAnnotation == null) {
+			throw new SoapUiSpringTestException("Missing annotation \'@" + SoapUiProject.class.getSimpleName() + "\' on class ["
+					+ testClass.getName() + "]");
+		}
+
 		try {
-			SoapUiProject projectName = getAnnotation(testClass, SoapUiProject.class);
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(projectName.value());
-			final File tempFile = File.createTempFile(PREFIX + projectName.value(), SUFFIX);
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(soapUiProjectAnnotation.value());
+			final File tempFile = File.createTempFile(PREFIX + soapUiProjectAnnotation.value(), SUFFIX);
 			tempFile.deleteOnExit();
 			out = new FileOutputStream(tempFile);
 			IOUtils.copy(in, out);
 			return tempFile;
-		} catch (IOException e) {
-			return null;
+		} catch (Exception e) {
+			throw new SoapUiSpringTestException("Error loading soapui project file from class " + testClass.getCanonicalName(), e);
 		} finally {
 			if (in != null) {
 				IOUtils.closeQuietly(in);
@@ -88,7 +87,4 @@ public class SoapUiSpringTestUtils {
 		}
 	}
 
-	public static <T extends Annotation> T getAnnotation(Class<?> klass, Class<T> annotationClass) {
-		return klass.getAnnotation(annotationClass);
-	}
 }
