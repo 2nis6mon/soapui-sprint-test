@@ -84,6 +84,10 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<scm>
+		<developerConnection>scm:svn:http://orangeforge.rd.francetelecom.fr/svnroot/softcu/soapui-spring-test/trunk/</developerConnection>
+	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.smartbear.soapui</groupId>
