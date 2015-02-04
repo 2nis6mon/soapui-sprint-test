@@ -3,7 +3,7 @@ package com.smartbear.soapui.spring;
 import java.util.Collections;
 import java.util.Map;
 
-public class SoapUiSpringTest {
+public abstract class SoapUiSpringTest {
 
 	private SoapUiTestSuiteProvider testSuiteProvider;
 

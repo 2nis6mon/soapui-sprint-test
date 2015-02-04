@@ -58,8 +58,6 @@ public class SoapUiSpringTestUtilsTest {
 
 		SoapUiSpringTestUtils.setWsdlProjectProProperties(projectMock, properties);
 
-		verify(projectMock, times(1)).removeProperty("property1");
-		verify(projectMock, times(1)).removeProperty("property2");
 		verify(projectMock, times(1)).setPropertyValue("property1", "value1");
 		verify(projectMock, times(1)).setPropertyValue("property2", "value2");
 	}

@@ -41,7 +41,6 @@ public class SoapUiSpringTestUtils {
 
 	public static void setWsdlProjectProProperties(WsdlProjectPro project, Map<String, String> properties) {
 		for (String key : properties.keySet()) {
-			project.removeProperty(key);
 			project.setPropertyValue(key, properties.get(key));
 		}
 	}

@@ -88,7 +88,7 @@ public class SoapUiTestSuiteProvider {
 		return testInstance;
 	}
 
-	public SoapUiTestCase getTest(final String id, final Map<String, String> properties) throws Throwable {
+	public SoapUiTestCase getTest(final String id, Map<String, String> properties) throws Throwable {
 		SoapUiSpringTestUtils.setWsdlProjectProProperties(project, properties);
 		Collection<SoapUiTestCase> filtered = Collections2.filter(allTests, new Predicate<SoapUiTestCase>() {
 
