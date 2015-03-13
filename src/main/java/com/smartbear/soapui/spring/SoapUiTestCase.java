@@ -27,7 +27,7 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 	}
 
 	public SoapUiTestCase(TestCase testCase, String uniqueId) {
-		super(testCase.getName());
+		super(convertAccents(testCase.getName()));
 		this.testCase = testCase;
 		this.uniqueId = uniqueId;
 	}
