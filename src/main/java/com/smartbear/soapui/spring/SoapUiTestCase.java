@@ -2,6 +2,7 @@ package com.smartbear.soapui.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.text.Normalizer;
 import java.util.List;
 
 import org.assertj.core.api.Condition;
@@ -20,6 +21,10 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 	private TestCase testCase;
 
 	private final String uniqueId;
+
+	public static String convertAccents(String accent) {
+		return Normalizer.normalize(accent, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+	}
 
 	public SoapUiTestCase(TestCase testCase, String uniqueId) {
 		super(testCase.getName());
