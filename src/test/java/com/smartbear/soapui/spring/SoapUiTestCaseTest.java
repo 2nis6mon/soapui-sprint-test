@@ -34,6 +34,7 @@ public class SoapUiTestCaseTest {
 		when(runner.getResults()).thenReturn(results);
 		when(testStepResult.getStatus()).thenReturn(TestStepStatus.OK);
 		when(runner.getStatus()).thenReturn(Status.FINISHED);
+		when(testCase.getName()).thenReturn("Name of the test");
 
 		SoapUiTestCase soapUiTestCase = new SoapUiTestCase(testCase, "uniqueId");
 
@@ -55,6 +56,7 @@ public class SoapUiTestCaseTest {
 		when(testStepResult.getTestStep()).thenReturn(testStep);
 		when(testStep.getName()).thenReturn("test step name");
 		when(runner.getStatus()).thenReturn(Status.FINISHED);
+		when(testCase.getName()).thenReturn("Name of the test");
 
 		SoapUiTestCase soapUiTestCase = new SoapUiTestCase(testCase, "uniqueId");
 		try {
