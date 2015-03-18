@@ -43,7 +43,7 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		assertThat(results).overridingErrorMessage(errorMessage(results)).are(new Condition<TestStepResult>() {
 			@Override
 			public boolean matches(TestStepResult value) {
-				return TestStepStatus.OK.equals(value.getStatus());
+				return TestStepStatus.OK.equals(value.getStatus()) || TestStepStatus.UNKNOWN.equals(value.getStatus());
 			}
 		});
 
@@ -54,7 +54,7 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		StringBuilder sb = new StringBuilder();
 
 		for (TestStepResult testStepResult : results) {
-			if (!TestStepStatus.OK.equals(testStepResult.getStatus())) {
+			if (!TestStepStatus.OK.equals(testStepResult.getStatus()) && !TestStepStatus.UNKNOWN.equals(testStepResult.getStatus())) {
 				sb.append(testStepResultErrorMessage(testStepResult));
 			}
 		}

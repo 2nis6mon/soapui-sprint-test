@@ -42,6 +42,25 @@ public class SoapUiTestCaseTest {
 	}
 
 	@Test
+	public void check_runTest_onTestUnknown() throws Throwable {
+
+		TestCase testCase = mock(TestCase.class);
+		WsdlTestCaseRunner runner = mock(WsdlTestCaseRunner.class);
+		TestStepResult testStepResult = mock(TestStepResult.class);
+		List<TestStepResult> results = Arrays.asList(testStepResult);
+
+		when(testCase.run(any(PropertiesMap.class), eq(false))).thenReturn(runner);
+		when(runner.getResults()).thenReturn(results);
+		when(testStepResult.getStatus()).thenReturn(TestStepStatus.UNKNOWN);
+		when(runner.getStatus()).thenReturn(Status.FINISHED);
+		when(testCase.getName()).thenReturn("Name of the test");
+
+		SoapUiTestCase soapUiTestCase = new SoapUiTestCase(testCase, "uniqueId");
+
+		soapUiTestCase.runBare();
+	}
+
+	@Test
 	public void check_runTest_onTestCaseKo() throws Throwable {
 
 		TestCase testCase = mock(TestCase.class);
