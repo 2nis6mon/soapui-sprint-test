@@ -13,10 +13,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.RestRequestStepResult;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.support.PropertiesMap;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 
@@ -65,23 +66,20 @@ public class SoapUiTestCaseTest {
 
 		TestCase testCase = mock(TestCase.class);
 		WsdlTestCaseRunner runner = mock(WsdlTestCaseRunner.class);
-		TestStepResult testStepResult = mock(TestStepResult.class);
-		TestStep testStep = mock(TestStep.class);
+		RestTestRequestStep testStep = mock(RestTestRequestStep.class);
+		RestRequestStepResult testStepResult = mock(RestRequestStepResult.class);
 
 		when(testCase.run(any(PropertiesMap.class), eq(false))).thenReturn(runner);
-		when(runner.getResults()).thenReturn(Arrays.asList(testStepResult));
-		when(testStepResult.getStatus()).thenReturn(TestStepStatus.FAILED);
-		when(testStepResult.getMessages()).thenReturn(new String[] { "failed step" });
-		when(testStepResult.getTestStep()).thenReturn(testStep);
 		when(testStep.getName()).thenReturn("test step name");
 		when(runner.getStatus()).thenReturn(Status.FINISHED);
 		when(testCase.getName()).thenReturn("Name of the test");
+		when(runner.getResults()).thenReturn(Arrays.asList((TestStepResult) testStepResult));
 
 		SoapUiTestCase soapUiTestCase = new SoapUiTestCase(testCase, "uniqueId");
 		try {
 			soapUiTestCase.runBare();
 		} catch (AssertionError e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo("\n\nStep <test step name> : FAILED\nfailed step");
+			Assertions.assertThat(e.getMessage()).isEqualTo("Results for test case [Name of the test]\n");
 			return;
 		}
 		failBecauseExceptionWasNotThrown(AssertionError.class);

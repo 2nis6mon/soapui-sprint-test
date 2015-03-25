@@ -2,6 +2,8 @@ package com.smartbear.soapui.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		WsdlTestCaseRunner runner = (WsdlTestCaseRunner) testCase.run(new PropertiesMap(), false);
 		List<TestStepResult> results = runner.getResults();
 
-		assertThat(results).overridingErrorMessage(errorMessage(results)).are(new Condition<TestStepResult>() {
+		assertThat(results).overridingErrorMessage(errorMessage(testCase.getName(), results)).are(new Condition<TestStepResult>() {
 			@Override
 			public boolean matches(TestStepResult value) {
 				return TestStepStatus.OK.equals(value.getStatus()) || TestStepStatus.UNKNOWN.equals(value.getStatus());
@@ -50,26 +52,16 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		assertThat(runner.getStatus()).isEqualTo(Status.FINISHED);
 	}
 
-	private String errorMessage(List<TestStepResult> results) {
+	private String errorMessage(String testCaseName, List<TestStepResult> results) {
 		StringBuilder sb = new StringBuilder();
-
+		sb.append("Results for test case [" + testCaseName + "]");
 		for (TestStepResult testStepResult : results) {
-			if (!TestStepStatus.OK.equals(testStepResult.getStatus()) && !TestStepStatus.UNKNOWN.equals(testStepResult.getStatus())) {
-				sb.append(testStepResultErrorMessage(testStepResult));
-			}
+			StringWriter stringWriter = new StringWriter();
+			PrintWriter printWriter = new PrintWriter(stringWriter, true);
+			testStepResult.writeTo(printWriter);
+			sb.append("\n" + stringWriter.toString());
 		}
 
-		return sb.toString();
-	}
-
-	private String testStepResultErrorMessage(TestStepResult testStepResult) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("\n\nStep <" + testStepResult.getTestStep().getName() + "> : " + testStepResult.getStatus() + "\n");
-
-		String[] messages = testStepResult.getMessages();
-		for (String message : messages) {
-			sb.append(message);
-		}
 		return sb.toString();
 	}
 
