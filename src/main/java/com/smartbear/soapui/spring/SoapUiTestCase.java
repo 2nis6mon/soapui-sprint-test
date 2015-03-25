@@ -56,10 +56,14 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Results for test case [" + testCaseName + "]");
 		for (TestStepResult testStepResult : results) {
-			StringWriter stringWriter = new StringWriter();
-			PrintWriter printWriter = new PrintWriter(stringWriter, true);
-			testStepResult.writeTo(printWriter);
-			sb.append("\n" + stringWriter.toString());
+			if (!TestStepStatus.OK.equals(testStepResult.getStatus()) && !TestStepStatus.UNKNOWN.equals(testStepResult.getStatus())) {
+				sb.append("\n---------- Test Step BEGIN ----------");
+				StringWriter stringWriter = new StringWriter();
+				PrintWriter printWriter = new PrintWriter(stringWriter, true);
+				testStepResult.writeTo(printWriter);
+				sb.append(stringWriter.toString());
+				sb.append("\n---------- Test Step END ------------");
+			}
 		}
 
 		return sb.toString();

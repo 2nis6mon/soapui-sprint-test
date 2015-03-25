@@ -79,7 +79,10 @@ public class SoapUiTestCaseTest {
 		try {
 			soapUiTestCase.runBare();
 		} catch (AssertionError e) {
-			Assertions.assertThat(e.getMessage()).isEqualTo("Results for test case [Name of the test]\n");
+			Assertions.assertThat(e.getMessage()).isEqualTo(
+					"Results for test case [Name of the test]" + "\n---------- Test Step BEGIN ----------"
+							+ "\n---------- Test Step END ------------");
+
 			return;
 		}
 		failBecauseExceptionWasNotThrown(AssertionError.class);
