@@ -8,12 +8,16 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.settings.ProxySettings;
+
 public class SoapUiSpringTestRunner extends SpringJUnit4ClassRunner {
 
 	SoapUiTestSuiteProvider soapUiTestProvider;
 
 	public SoapUiSpringTestRunner(Class<?> klass) throws InitializationError {
 		super(klass);
+		SoapUI.getSettings().setString(ProxySettings.EXCLUDES, "localhost");
 	}
 
 	@SuppressWarnings("unchecked")
