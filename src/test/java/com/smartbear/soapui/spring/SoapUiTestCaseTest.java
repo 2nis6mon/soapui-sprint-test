@@ -80,8 +80,8 @@ public class SoapUiTestCaseTest {
 			soapUiTestCase.runBare();
 		} catch (AssertionError e) {
 			Assertions.assertThat(e.getMessage()).isEqualTo(
-					"Results for test case [Name of the test]" + "\n---------- Test Step BEGIN ----------"
-							+ "\n---------- Test Step END ------------");
+					"Results for test case [Name of the test]" + "\n---------- Test Step BEGIN ----------\n"
+							+ "\n---------- Test Step END ------------\n");
 
 			return;
 		}
