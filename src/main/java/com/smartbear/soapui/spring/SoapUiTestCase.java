@@ -48,6 +48,7 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		WsdlTestCaseRunner runner = (WsdlTestCaseRunner) testCase.run(new PropertiesMap(), false);
 		List<TestStepResult> results = runner.getResults();
 		LOGGER.debug(getMessages(testCase.getName(), results));
+		boolean isSoapUiFailDetailLog = Boolean.getBoolean("soapui.fail.detail");
 
 		Collection<TestStepResult> filteredResult = Collections2.filter(results, new Predicate<TestStepResult>() {
 			public boolean apply(TestStepResult testStepResult) {
@@ -55,8 +56,8 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 			}
 		});
 
-		assertThat(filteredResult).overridingErrorMessage(
-				getMessages(testCase.getName(), (Boolean.getBoolean("soapui.fail.detail") ? results : filteredResult))).isEmpty();
+		assertThat(filteredResult).overridingErrorMessage(getMessages(testCase.getName(), isSoapUiFailDetailLog ? results : filteredResult))
+				.isEmpty();
 		assertThat(runner.getStatus()).isEqualTo(Status.FINISHED);
 	}
 
