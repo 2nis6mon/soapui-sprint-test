@@ -55,11 +55,12 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 			}
 		});
 
-		assertThat(filteredResult).overridingErrorMessage(getMessages(testCase.getName(), results)).isEmpty();
+		assertThat(filteredResult).overridingErrorMessage(
+				getMessages(testCase.getName(), (Boolean.getBoolean("soapui.fail.detail") ? results : filteredResult))).isEmpty();
 		assertThat(runner.getStatus()).isEqualTo(Status.FINISHED);
 	}
 
-	private String getMessages(String testCaseName, List<TestStepResult> results) {
+	private String getMessages(String testCaseName, Collection<TestStepResult> results) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Results for test case [" + testCaseName + "]");
 		for (TestStepResult testStepResult : results) {
