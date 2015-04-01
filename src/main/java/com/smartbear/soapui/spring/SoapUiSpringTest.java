@@ -3,6 +3,11 @@ package com.smartbear.soapui.spring;
 import java.util.Collections;
 import java.util.Map;
 
+import org.junit.After;
+import org.junit.Before;
+
+import com.eviware.soapui.support.SoapUIException;
+
 public abstract class SoapUiSpringTest {
 
 	private SoapUiTestSuiteProvider testSuiteProvider;
@@ -27,6 +32,16 @@ public abstract class SoapUiSpringTest {
 
 	public Map<String, String> getTestProperties() {
 		return Collections.emptyMap();
+	}
+
+	@Before
+	public void beforeSoapUiSpringTest() throws SoapUIException {
+		testSuiteProvider.openProject();
+	}
+
+	@After
+	public void afterSoapUiSpringTest() {
+		testSuiteProvider.closeProject();
 	}
 
 }

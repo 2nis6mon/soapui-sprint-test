@@ -13,7 +13,9 @@ import javassist.CtMethod;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
+import com.eviware.soapui.support.SoapUIException;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -23,11 +25,13 @@ public class SoapUiTestSuiteProvider {
 	private final List<Method> generatedTestMethods;
 	private final List<SoapUiTestCase> allTests;
 	private final WsdlProjectPro project;
+	private final WorkspaceImpl workspace;
 
 	public SoapUiTestSuiteProvider(Class<? extends SoapUiSpringTest> clazz) {
 		try {
 
 			project = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
+			workspace = project.getWorkspace();
 			allTests = SoapUiSpringTestUtils.getSoapUiTestCases(project);
 
 			generatedTestClass = generateSoapUiProjectTestClass(clazz, allTests);
@@ -103,5 +107,13 @@ public class SoapUiTestSuiteProvider {
 		}
 		return filtered.iterator().next();
 
+	}
+
+	public void closeProject() {
+		workspace.closeProject(project);
+	}
+
+	public void openProject() throws SoapUIException {
+		workspace.openProject(project);
 	}
 }
