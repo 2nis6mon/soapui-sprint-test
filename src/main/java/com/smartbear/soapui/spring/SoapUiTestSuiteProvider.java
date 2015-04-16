@@ -2,7 +2,9 @@ package com.smartbear.soapui.spring;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -10,12 +12,15 @@ import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.ClassFile;
+import javassist.bytecode.ConstPool;
+import javassist.bytecode.annotation.Annotation;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.junit.Ignore;
 
-import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
-import com.eviware.soapui.support.SoapUIException;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -25,16 +30,24 @@ public class SoapUiTestSuiteProvider {
 	private final List<Method> generatedTestMethods;
 	private final List<SoapUiTestCase> allTests;
 	private final WsdlProjectPro project;
-	private final WorkspaceImpl workspace;
 
 	public SoapUiTestSuiteProvider(Class<? extends SoapUiSpringTest> clazz) {
 		try {
 
 			project = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
-			workspace = project.getWorkspace();
 			allTests = SoapUiSpringTestUtils.getSoapUiTestCases(project);
 
-			generatedTestClass = generateSoapUiProjectTestClass(clazz, allTests);
+			IgnoreTestCase ignoreTestCase = clazz.getAnnotation(IgnoreTestCase.class);
+			if (ignoreTestCase != null && ignoreTestCase.value().length == 0) {
+				throw new SoapUiSpringTestException("Empty mandatory value \'@" + IgnoreTestCase.class.getSimpleName() + "\' on class ["
+						+ clazz.getName() + "]");
+			}
+			List<String> ignoreTestCases = Collections.emptyList();
+			if (ignoreTestCase != null) {
+				ignoreTestCases = Arrays.asList(ignoreTestCase.value());
+			}
+
+			generatedTestClass = generateSoapUiProjectTestClass(clazz, allTests, ignoreTestCases);
 			generatedTestMethods = getSoapUiProjectTestClassMethods(generatedTestClass, allTests);
 
 		} catch (Exception e) {
@@ -48,7 +61,7 @@ public class SoapUiTestSuiteProvider {
 
 	@SuppressWarnings("unchecked")
 	static Class<? extends SoapUiSpringTest> generateSoapUiProjectTestClass(Class<? extends SoapUiSpringTest> superClazz,
-			List<SoapUiTestCase> allTests) throws Exception {
+			List<SoapUiTestCase> allTests, Collection<String> ignoreTestCases) throws Exception {
 
 		ClassPool pool = ClassPool.getDefault();
 		CtClass newClazz = pool.makeClass(superClazz.getName() + ".generated" + System.nanoTime());
@@ -58,6 +71,15 @@ public class SoapUiTestSuiteProvider {
 		for (SoapUiTestCase soapUiTestCase : allTests) {
 			CtMethod m = createTestMethod(newClazz, soapUiTestCase);
 			newClazz.addMethod(m);
+
+			if (ignoreTestCases.contains(soapUiTestCase.getName())) {
+				ClassFile ccFile = newClazz.getClassFile();
+				ConstPool constpool = ccFile.getConstPool();
+				AnnotationsAttribute attr = new AnnotationsAttribute(constpool, AnnotationsAttribute.visibleTag);
+				Annotation annot = new Annotation(Ignore.class.getCanonicalName(), constpool);
+				attr.addAnnotation(annot);
+				m.getMethodInfo().addAttribute(attr);
+			}
 		}
 
 		Class<? extends SoapUiSpringTest> generatedTestClass = newClazz.toClass(ClassLoader.getSystemClassLoader(), null);
@@ -70,6 +92,7 @@ public class SoapUiTestSuiteProvider {
 		for (SoapUiTestCase soapUiTestCase : allTests) {
 			Method m = generatedClass.getMethod(soapUiTestCase.getName());
 			generatedTestMethods.add(m);
+
 		}
 		return generatedTestMethods;
 	}
@@ -107,13 +130,5 @@ public class SoapUiTestSuiteProvider {
 		}
 		return filtered.iterator().next();
 
-	}
-
-	public void closeProject() {
-		workspace.closeProject(project);
-	}
-
-	public void openProject() throws SoapUIException {
-		workspace.openProject(project);
 	}
 }

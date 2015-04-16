@@ -12,6 +12,7 @@ import org.apache.ws.security.util.UUIDGenerator;
 
 import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
 import com.eviware.soapui.model.testsuite.TestCase;
+import com.google.common.base.Strings;
 
 public class SoapUiSpringTestUtils {
 
@@ -62,7 +63,7 @@ public class SoapUiSpringTestUtils {
 		InputStream in = null;
 		FileOutputStream out = null;
 		SoapUiProject soapUiProjectAnnotation = testClass.getAnnotation(SoapUiProject.class);
-		if (soapUiProjectAnnotation == null) {
+		if (soapUiProjectAnnotation == null || Strings.isNullOrEmpty(soapUiProjectAnnotation.value())) {
 			throw new SoapUiSpringTestException("Missing annotation \'@" + SoapUiProject.class.getSimpleName() + "\' on class ["
 					+ testClass.getName() + "]");
 		}
