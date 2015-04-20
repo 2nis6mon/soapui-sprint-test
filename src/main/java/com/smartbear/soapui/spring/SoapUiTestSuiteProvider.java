@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Ignore;
 
 import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -37,15 +38,7 @@ public class SoapUiTestSuiteProvider {
 			project = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
 			allTests = SoapUiSpringTestUtils.getSoapUiTestCases(project);
 
-			IgnoreTestCase ignoreTestCase = clazz.getAnnotation(IgnoreTestCase.class);
-			if (ignoreTestCase != null && ignoreTestCase.value().length == 0) {
-				throw new SoapUiSpringTestException("Empty mandatory value \'@" + IgnoreTestCase.class.getSimpleName() + "\' on class ["
-						+ clazz.getName() + "]");
-			}
-			List<String> ignoreTestCases = Collections.emptyList();
-			if (ignoreTestCase != null) {
-				ignoreTestCases = Arrays.asList(ignoreTestCase.value());
-			}
+			Collection<String> ignoreTestCases = createIgnoreTestCasesList(clazz);
 
 			generatedTestClass = generateSoapUiProjectTestClass(clazz, allTests, ignoreTestCases);
 			generatedTestMethods = getSoapUiProjectTestClassMethods(generatedTestClass, allTests);
@@ -57,6 +50,49 @@ public class SoapUiTestSuiteProvider {
 
 			throw new SoapUiSpringTestException(e);
 		}
+	}
+
+	public Collection<String> createIgnoreTestCasesList(Class<? extends SoapUiSpringTest> clazz) {
+		IgnoreTestCase ignoreTestCase = clazz.getAnnotation(IgnoreTestCase.class);
+		if (ignoreTestCase != null && ignoreTestCase.value().length == 0) {
+			throw new SoapUiSpringTestException("Empty mandatory value \'@" + IgnoreTestCase.class.getSimpleName() + "\' on class ["
+					+ clazz.getName() + "]");
+		}
+		Collection<String> ignoreTestCases = Collections.emptyList();
+		if (ignoreTestCase != null) {
+			ignoreTestCases = Arrays.asList(ignoreTestCase.value());
+		}
+
+		IgnoreAllTestCasesExcluding ignoreAllTestCaseExcept = clazz.getAnnotation(IgnoreAllTestCasesExcluding.class);
+		if (ignoreAllTestCaseExcept != null && ignoreAllTestCaseExcept.value().length == 0) {
+			throw new SoapUiSpringTestException("Empty mandatory value \'@" + IgnoreAllTestCasesExcluding.class.getSimpleName() + "\' on class ["
+					+ clazz.getName() + "]");
+		}
+		if (ignoreAllTestCaseExcept != null && ignoreTestCase != null) {
+			throw new SoapUiSpringTestException("Do not use '@" + IgnoreTestCase.class.getSimpleName() + "\' and '@"
+					+ IgnoreAllTestCasesExcluding.class.getSimpleName() + "\' on the same class [" + clazz.getName() + "]");
+		}
+
+		if (ignoreAllTestCaseExcept != null) {
+			ignoreTestCases = new ArrayList<String>();
+			final List<String> excludeFromIgnore = Arrays.asList(ignoreAllTestCaseExcept.value());
+
+			Collection<String> result = Collections2.transform(allTests, new Function<SoapUiTestCase, String>() {
+
+				public String apply(SoapUiTestCase soapUiTestCase) {
+					return soapUiTestCase.getName();
+				}
+			});
+
+			ignoreTestCases = Collections2.filter(result, new Predicate<String>() {
+
+				public boolean apply(String testName) {
+					return !excludeFromIgnore.contains(testName);
+				}
+			});
+		}
+
+		return ignoreTestCases;
 	}
 
 	@SuppressWarnings("unchecked")
