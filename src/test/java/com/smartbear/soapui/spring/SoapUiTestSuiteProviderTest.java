@@ -14,7 +14,7 @@ public class SoapUiTestSuiteProviderTest {
 
 		assertThat(soapUiTestSuiteProvider).isNotNull();
 		assertThat(soapUiTestSuiteProvider.getTestMethods()).hasSize(1);
-		assertThat(soapUiTestSuiteProvider.getTestMethods().get(0).getName()).isEqualTo("TestCase");
+		assertThat(soapUiTestSuiteProvider.getTestMethods().get(0).getName()).isEqualTo("TestSuiteMock - TestCase");
 		assertThat(soapUiTestSuiteProvider.newTestClassInstance()).isInstanceOf(ExistingProjectSoapUiTestClass.class);
 
 	}
@@ -25,7 +25,7 @@ public class SoapUiTestSuiteProviderTest {
 
 		assertThat(soapUiTestSuiteProvider).isNotNull();
 		assertThat(soapUiTestSuiteProvider.getTestMethods()).hasSize(1);
-		assertThat(soapUiTestSuiteProvider.getTestMethods().get(0).getName()).isEqualTo("TestCase");
+		assertThat(soapUiTestSuiteProvider.getTestMethods().get(0).getName()).isEqualTo("TestSuiteMock - TestCase");
 		assertThat(soapUiTestSuiteProvider.newTestClassInstance()).isInstanceOf(ExistingProjectSoapUiTestClass.class);
 
 	}

@@ -51,7 +51,7 @@ public class SoapUiSpringTestUtils {
 		List<TestCase> testCases = testSuite.getTestCaseList();
 		for (TestCase testCase : testCases) {
 			if (!testCase.isDisabled()) {
-				testCaseList.add(new SoapUiTestCase(testCase, UUIDGenerator.getUUID()));
+				testCaseList.add(new SoapUiTestCase(testSuite.getName(), testCase, UUIDGenerator.getUUID()));
 			}
 		}
 

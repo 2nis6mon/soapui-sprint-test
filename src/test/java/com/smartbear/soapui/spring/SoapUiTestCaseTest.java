@@ -37,7 +37,7 @@ public class SoapUiTestCaseTest {
 		when(runner.getStatus()).thenReturn(Status.FINISHED);
 		when(testCase.getName()).thenReturn("Name of the test");
 
-		SoapUiTestCase soapUiTestCase = new SoapUiTestCase(testCase, "uniqueId");
+		SoapUiTestCase soapUiTestCase = new SoapUiTestCase("TestSuite Name", testCase, "uniqueId");
 
 		soapUiTestCase.runBare();
 	}
@@ -56,7 +56,7 @@ public class SoapUiTestCaseTest {
 		when(runner.getStatus()).thenReturn(Status.FINISHED);
 		when(testCase.getName()).thenReturn("Name of the test");
 
-		SoapUiTestCase soapUiTestCase = new SoapUiTestCase(testCase, "uniqueId");
+		SoapUiTestCase soapUiTestCase = new SoapUiTestCase("TestSuite Name", testCase, "uniqueId");
 
 		soapUiTestCase.runBare();
 	}
@@ -75,7 +75,7 @@ public class SoapUiTestCaseTest {
 		when(testCase.getName()).thenReturn("Name of the test");
 		when(runner.getResults()).thenReturn(Arrays.asList((TestStepResult) testStepResult));
 
-		SoapUiTestCase soapUiTestCase = new SoapUiTestCase(testCase, "uniqueId");
+		SoapUiTestCase soapUiTestCase = new SoapUiTestCase("TestSuite Name", testCase, "uniqueId");
 		try {
 			soapUiTestCase.runBare();
 		} catch (AssertionError e) {

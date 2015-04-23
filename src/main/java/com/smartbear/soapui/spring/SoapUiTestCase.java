@@ -34,8 +34,8 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		return Normalizer.normalize(accent, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 	}
 
-	public SoapUiTestCase(TestCase testCase, String uniqueId) {
-		super(convertAccents(testCase.getName()));
+	public SoapUiTestCase(String testSuiteName, TestCase testCase, String uniqueId) {
+		super(convertAccents(testSuiteName + " - " + testCase.getName()));
 		this.testCase = testCase;
 		this.uniqueId = uniqueId;
 	}
