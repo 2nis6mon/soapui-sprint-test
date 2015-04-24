@@ -7,15 +7,20 @@ import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.support.PropertiesMap;
+import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
+import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.google.common.base.Predicate;
@@ -56,7 +61,42 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		});
 
 		assertThat(filteredResult).overridingErrorMessage(getMessages(testCase.getName(), filteredResult)).isEmpty();
+
+		Map<String, TestStep> allTestSteps = runner.getTestRunnable() != null ? runner.getTestRunnable().getTestSteps() : null;
+		if ((!Status.FINISHED.equals(runner.getStatus())) && results.size() != allTestSteps.size()) {
+			assertAllTestSteps(allTestSteps);
+		}
+
 		assertThat(runner.getStatus()).isEqualTo(Status.FINISHED);
+
+	}
+
+	private void assertAllTestSteps(Map<String, TestStep> allTestSteps) {
+		for (TestStep testStep : allTestSteps.values()) {
+
+			if (testStep instanceof RestTestRequestStep) {
+				RestTestRequestStep restTestRequestStep = (RestTestRequestStep) testStep;
+
+				if (AssertionStatus.FAILED.equals(restTestRequestStep.getAssertionStatus())) {
+					for (TestAssertion testAssertion : restTestRequestStep.getAssertionList()) {
+						assertThat(testAssertion.getStatus()).overridingErrorMessage(getTestStepMessage(testAssertion, testStep)).isEqualTo(
+								AssertionStatus.VALID);
+					}
+				}
+			}
+		}
+	}
+
+	private String getTestStepMessage(TestAssertion testAssertion, TestStep testStep) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Expected :VALID but was ").append(testAssertion.getStatus());
+		sb.append("\n TestStep: ").append(testStep.getName()).append("\n Assertion: ").append(testAssertion.getName());
+		String reasonForFailure = null;
+		if (testAssertion.getErrors() != null) {
+			reasonForFailure = testAssertion.getErrors()[0].getMessage();
+		}
+		sb.append("\n").append(reasonForFailure);
+		return sb.toString();
 	}
 
 	private String getMessages(String testCaseName, Collection<TestStepResult> results) {
