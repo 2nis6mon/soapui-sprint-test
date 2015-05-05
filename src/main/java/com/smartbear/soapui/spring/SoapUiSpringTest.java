@@ -22,7 +22,7 @@ public abstract class SoapUiSpringTest {
 	 * @throws Throwable
 	 */
 	public void launchTest(String id) throws Throwable {
-		testSuiteProvider.getTest(id, getTestProperties()).runBare();
+		testSuiteProvider.getTest(this.getClass(), id, getTestProperties()).runBare();
 	}
 
 	public Map<String, String> getTestProperties() {

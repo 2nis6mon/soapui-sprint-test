@@ -13,6 +13,7 @@ import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCaseRunner;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
 import com.eviware.soapui.model.support.PropertiesMap;
@@ -120,4 +121,15 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 		return sb.toString();
 	}
 
+	public void clear() {
+		WsdlTestCase wsdlTestCase = (WsdlTestCase) testCase;
+		while (wsdlTestCase.getLoadTestCount() > 0) {
+			wsdlTestCase.removeLoadTest(wsdlTestCase.getLoadTestAt(0));
+		}
+
+		while (wsdlTestCase.getTestStepCount() > 0)
+			wsdlTestCase.removeTestStep(wsdlTestCase.getTestStepAt(0));
+
+		testCase = null;
+	}
 }

@@ -10,8 +10,14 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.ws.security.util.UUIDGenerator;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.workspace.WorkspaceFactory;
+import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.types.StringToStringMap;
 import com.google.common.base.Strings;
 
 public class SoapUiSpringTestUtils {
@@ -19,9 +25,31 @@ public class SoapUiSpringTestUtils {
 	public static final String PREFIX = "projectFile_";
 	public static final String SUFFIX = ".xml";
 
+	public static WorkspaceImpl workspace = null;
+
 	public static WsdlProjectPro createWsdlProjectPro(Class<?> klass) {
-		File tmpFile = getProjectFile(klass);
-		return new WsdlProjectPro(tmpFile.getAbsolutePath());
+		File projectFile = getProjectFile(klass);
+		WorkspaceImpl workspace = getWorkspace();
+		WsdlProjectPro project = new WsdlProjectPro(projectFile.getAbsolutePath());
+		@SuppressWarnings("unchecked")
+		List<Project> projectList = (List<Project>) workspace.getProjectList();
+		projectList.add(project);
+		return project;
+	}
+
+	private static WorkspaceImpl getWorkspace() {
+
+		if (workspace == null) {
+			String workspaceFile = "target" + File.separatorChar + SoapUI.DEFAULT_WORKSPACE_FILE;
+
+			StringToStringMap projectOptions = new StringToStringMap(1);
+			try {
+				workspace = (WorkspaceImpl) WorkspaceFactory.getInstance().openWorkspace(workspaceFile, projectOptions);
+			} catch (SoapUIException e) {
+				throw new SoapUiSpringTestException(e);
+			}
+		}
+		return workspace;
 	}
 
 	public static List<SoapUiTestCase> getSoapUiTestCases(WsdlProjectPro project) {

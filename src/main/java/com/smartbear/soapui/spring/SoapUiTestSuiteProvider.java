@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,14 +30,16 @@ public class SoapUiTestSuiteProvider {
 
 	private final Class<? extends SoapUiSpringTest> generatedTestClass;
 	private final List<Method> generatedTestMethods;
-	private final List<SoapUiTestCase> allTests;
-	private final WsdlProjectPro project;
+
+	private static Map<Class<?>, WsdlProjectPro> projectMap = new HashMap<Class<?>, WsdlProjectPro>();
+	private static Map<Class<?>, List<SoapUiTestCase>> allTestsMap = new HashMap<Class<?>, List<SoapUiTestCase>>();
 
 	public SoapUiTestSuiteProvider(Class<? extends SoapUiSpringTest> clazz) {
 		try {
-
-			project = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
-			allTests = SoapUiSpringTestUtils.getSoapUiTestCases(project);
+			WsdlProjectPro project = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
+			projectMap.put(clazz, project);
+			List<SoapUiTestCase> allTests = SoapUiSpringTestUtils.getSoapUiTestCases(project);
+			allTestsMap.put(clazz, allTests);
 
 			Collection<String> ignoreTestCases = createIgnoreTestCasesList(clazz);
 
@@ -50,6 +53,17 @@ public class SoapUiTestSuiteProvider {
 
 			throw new SoapUiSpringTestException(e);
 		}
+	}
+
+	public static void clear(Class<? extends SoapUiSpringTest> clazz) {
+		for (SoapUiTestCase test : allTestsMap.get(clazz)) {
+			test.clear();
+		}
+		allTestsMap.remove(clazz);
+
+		WsdlProjectPro project = projectMap.get(clazz);
+		project.getWorkspace().closeProject(project);
+		projectMap.remove(clazz);
 	}
 
 	public Collection<String> createIgnoreTestCasesList(Class<? extends SoapUiSpringTest> clazz) {
@@ -77,6 +91,7 @@ public class SoapUiTestSuiteProvider {
 			ignoreTestCases = new ArrayList<String>();
 			final List<String> excludeFromIgnore = Arrays.asList(ignoreAllTestCaseExcept.value());
 
+			Collection<SoapUiTestCase> allTests = allTestsMap.get(clazz);
 			Collection<String> result = Collections2.transform(allTests, new Function<SoapUiTestCase, String>() {
 
 				public String apply(SoapUiTestCase soapUiTestCase) {
@@ -151,8 +166,10 @@ public class SoapUiTestSuiteProvider {
 		return testInstance;
 	}
 
-	public SoapUiTestCase getTest(final String id, Map<String, String> properties) throws Throwable {
+	public SoapUiTestCase getTest(Class<?> clazz, final String id, Map<String, String> properties) throws Throwable {
+		WsdlProjectPro project = projectMap.get(clazz);
 		SoapUiSpringTestUtils.setWsdlProjectProProperties(project, properties);
+		Collection<SoapUiTestCase> allTests = allTestsMap.get(clazz);
 		Collection<SoapUiTestCase> filtered = Collections2.filter(allTests, new Predicate<SoapUiTestCase>() {
 
 			public boolean apply(SoapUiTestCase input) {
