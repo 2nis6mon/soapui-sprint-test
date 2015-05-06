@@ -30,7 +30,7 @@ public class SoapUiSpringTestUtils {
 	public static WsdlProjectPro createWsdlProjectPro(Class<?> klass) {
 		File projectFile = getProjectFile(klass);
 		WorkspaceImpl workspace = getWorkspace();
-		WsdlProjectPro project = new WsdlProjectPro(projectFile.getAbsolutePath());
+		WsdlProjectPro project = new WsdlProjectPro(projectFile.getAbsolutePath(), workspace);
 		@SuppressWarnings("unchecked")
 		List<Project> projectList = (List<Project>) workspace.getProjectList();
 		projectList.add(project);
