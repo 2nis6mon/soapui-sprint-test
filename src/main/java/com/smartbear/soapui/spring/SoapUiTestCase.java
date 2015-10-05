@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -63,8 +64,9 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 
 		assertThat(filteredResult).overridingErrorMessage(getMessages(testCase.getName(), filteredResult)).isEmpty();
 
-		Map<String, TestStep> allTestSteps = runner.getTestRunnable() != null ? runner.getTestRunnable().getTestSteps() : null;
-		if ((!Status.FINISHED.equals(runner.getStatus())) && results.size() != allTestSteps.size()) {
+		Map<String, TestStep> emptyTestSteps = Collections.emptyMap();
+		Map<String, TestStep> allTestSteps = runner.getTestRunnable() != null ? runner.getTestRunnable().getTestSteps() : emptyTestSteps;
+		if (results.size() != allTestSteps.size()) {
 			assertAllTestSteps(allTestSteps);
 		}
 
