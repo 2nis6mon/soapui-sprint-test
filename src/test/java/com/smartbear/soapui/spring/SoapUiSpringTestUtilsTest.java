@@ -31,7 +31,7 @@ public class SoapUiSpringTestUtilsTest {
 	}
 
 	@Test(expected = SoapUiSpringTestException.class)
-	public void check_crateWsdlProjectPro_fileNotFound() {
+	public void check_createWsdlProjectPro_fileNotFound() {
 		SoapUiSpringTestUtils.createWsdlProjectPro(NotExistingProjectSoapUiTestClass.class);
 	}
 
