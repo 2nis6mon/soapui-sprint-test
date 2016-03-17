@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<version>0.9</version>
+	<version>0.10-SNAPSHOT</version>
 	<groupId>com.smartbear.soapui</groupId>
 	<artifactId>soapui-spring-test</artifactId>
 	<name>SoapUI Spring Test</name>
@@ -84,7 +84,7 @@
 	</distributionManagement>
 
 	<scm>
-		<developerConnection>scm:svn:https://www.forge.orange-labs.fr/svnroot/softcu/soapui-spring-test/tags/soapui-spring-test-0.9</developerConnection>
+		<developerConnection>scm:svn:https://www.forge.orange-labs.fr/svnroot/softcu/soapui-spring-test/trunk</developerConnection>
 	</scm>
 
 	<dependencies>
