@@ -52,6 +52,10 @@ public class SoapUiTestCase extends junit.framework.TestCase {
 	}
 
 	protected void runTest() throws Throwable {
+		if (testCase instanceof WsdlTestCase) {
+			WsdlTestCase wsdlTestCase = (WsdlTestCase) testCase;
+			wsdlTestCase.setFailOnError(true);
+		}
 		WsdlTestCaseRunner runner = (WsdlTestCaseRunner) testCase.run(new PropertiesMap(), false);
 		List<TestStepResult> results = runner.getResults();
 		LOGGER.debug(getMessages(testCase.getName(), results));
