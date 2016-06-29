@@ -75,11 +75,11 @@
 	<distributionManagement>
 		<repository>
 			<id>nexus-releases</id>
-			<url>http://dvdsi400w.intranet-paris.francetelecom.fr:8081/nexus/content/repositories/releases</url>
+			<url>http://dvdsi400w.creteil.francetelecom.fr:8081/nexus/content/repositories/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<url>http://dvdsi400w.intranet-paris.francetelecom.fr:8081/nexus/content/repositories/snapshots</url>
+			<url>http://dvdsi400w.creteil.francetelecom.fr:8081/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
