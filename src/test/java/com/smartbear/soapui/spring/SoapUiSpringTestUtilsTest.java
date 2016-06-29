@@ -37,15 +37,15 @@ public class SoapUiSpringTestUtilsTest {
 
 	@Test
 	public void check_createWsdlProjectPro_existingProject() {
-		WsdlProjectPro project = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
-		assertThat(project).isNotNull();
+		List<WsdlProjectPro> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
+		assertThat(projects).isNotEmpty();
 	}
 
 	@Test
 	public void check_getSoapUiTestCases() {
-		WsdlProjectPro project = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
-		assertThat(project).isNotNull();
-		List<SoapUiTestCase> testCases = SoapUiSpringTestUtils.getSoapUiTestCases(project);
+		List<WsdlProjectPro> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
+		assertThat(projects).isNotEmpty();
+		List<SoapUiTestCase> testCases = SoapUiSpringTestUtils.getSoapUiTestCases(projects.get(0));
 		assertThat(testCases).isNotEmpty();
 	}
 

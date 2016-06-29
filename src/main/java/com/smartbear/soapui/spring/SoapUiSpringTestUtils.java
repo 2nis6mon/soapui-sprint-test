@@ -16,19 +16,24 @@ import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 public class SoapUiSpringTestUtils {
 
 	public static WorkspaceImpl workspace = null;
 
-	public static WsdlProjectPro createWsdlProjectPro(Class<?> klass) {
-		File projectFile = getProjectFile(klass);
+	public static List<WsdlProjectPro> createWsdlProjectPro(Class<?> klass) {
+		List<File> projectFiles = getProjectFiles(klass);
 		WorkspaceImpl workspace = getWorkspace();
-		WsdlProjectPro project = new WsdlProjectPro(projectFile.getAbsolutePath(), workspace);
-		@SuppressWarnings("unchecked")
-		List<Project> projectList = (List<Project>) workspace.getProjectList();
-		projectList.add(project);
-		return project;
+		List<WsdlProjectPro> wdslProjects = Lists.newArrayList();
+		for (File projectFile : projectFiles) {
+			WsdlProjectPro project = new WsdlProjectPro(projectFile.getAbsolutePath(), workspace);
+			@SuppressWarnings("unchecked")
+			List<Project> projectList = (List<Project>) workspace.getProjectList();
+			projectList.add(project);
+			wdslProjects.add(project);
+		}
+		return wdslProjects;
 	}
 
 	private static WorkspaceImpl getWorkspace() {
@@ -80,18 +85,35 @@ public class SoapUiSpringTestUtils {
 		return testCaseList;
 	}
 
-	private static File getProjectFile(Class<?> testClass) {
+	private static List<File> getProjectFiles(Class<?> testClass) {
 		SoapUiProject soapUiProjectAnnotation = testClass.getAnnotation(SoapUiProject.class);
-		if (soapUiProjectAnnotation == null || Strings.isNullOrEmpty(soapUiProjectAnnotation.value())) {
-			throw new SoapUiSpringTestException("Missing annotation \'@" + SoapUiProject.class.getSimpleName() + "\' on class ["
-					+ testClass.getName() + "]");
+
+		if (soapUiProjectAnnotation != null && !Strings.isNullOrEmpty(soapUiProjectAnnotation.value())) {
+			final File file = new File(soapUiProjectAnnotation.value());
+			if (!file.exists()) {
+				throw new SoapUiSpringTestException("Missing file " + file.getAbsolutePath());
+			}
+			return Lists.newArrayList(file);
 		}
 
-		final File file = new File(soapUiProjectAnnotation.value());
-		if (!file.exists()) {
-			throw new SoapUiSpringTestException("Missing file " + file.getAbsolutePath());
+		SoapUiProjects soapUiProjectsAnnotation = testClass.getAnnotation(SoapUiProjects.class);
+
+		if (soapUiProjectsAnnotation != null && soapUiProjectsAnnotation.value().length != 0) {
+
+			List<File> soapuiProjectsFiles = Lists.newArrayList();
+			for (String soapuiProject : soapUiProjectsAnnotation.value()) {
+				final File file = new File(soapuiProject);
+				if (!file.exists()) {
+					throw new SoapUiSpringTestException("Missing file " + file.getAbsolutePath());
+				}
+				soapuiProjectsFiles.add(file);
+
+			}
+			return soapuiProjectsFiles;
 		}
-		return file;
+
+		throw new SoapUiSpringTestException("Missing annotation \'@" + SoapUiProject.class.getSimpleName() + "\' or annotation \'@"
+				+ SoapUiProject.class.getSimpleName() + "\' on class [" + testClass.getName() + "]");
+
 	}
-
 }
