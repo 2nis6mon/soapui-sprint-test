@@ -21,7 +21,7 @@ import javassist.bytecode.annotation.Annotation;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Ignore;
 
-import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -32,15 +32,15 @@ public class SoapUiTestSuiteProvider {
 	private final Class<? extends SoapUiSpringTest> generatedTestClass;
 	private final List<Method> generatedTestMethods;
 
-	private static Map<Class<?>, List<WsdlProjectPro>> projectMap = new HashMap<Class<?>, List<WsdlProjectPro>>();
+	private static Map<Class<?>, List<WsdlProject>> projectMap = new HashMap<Class<?>, List<WsdlProject>>();
 	private static Map<Class<?>, List<SoapUiTestCase>> allTestsMap = new HashMap<Class<?>, List<SoapUiTestCase>>();
 
 	public SoapUiTestSuiteProvider(Class<? extends SoapUiSpringTest> clazz) {
 		try {
-			List<WsdlProjectPro> projects = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
+			List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
 
 			List<SoapUiTestCase> reallyAllTests = Lists.newArrayList();
-			for (WsdlProjectPro wsdlProjectPro : projects) {
+			for (WsdlProject wsdlProjectPro : projects) {
 				//projectMap.put(clazz, wsdlProjectPro);
 				List<SoapUiTestCase> allTests = SoapUiSpringTestUtils.getSoapUiTestCases(wsdlProjectPro);
 				reallyAllTests.addAll(allTests);
@@ -74,8 +74,8 @@ public class SoapUiTestSuiteProvider {
 		//		project.getWorkspace().closeProject(project);
 		//		projectMap.remove(clazz);
 
-		List<WsdlProjectPro> projects = projectMap.get(clazz);
-		for (WsdlProjectPro wsdlProjectPro : projects) {
+		List<WsdlProject> projects = projectMap.get(clazz);
+		for (WsdlProject wsdlProjectPro : projects) {
 			wsdlProjectPro.getWorkspace().closeProject(wsdlProjectPro);
 		}
 		projectMap.remove(clazz);
@@ -182,8 +182,8 @@ public class SoapUiTestSuiteProvider {
 	}
 
 	public SoapUiTestCase getTest(Class<?> clazz, final String id, Map<String, String> properties) throws Throwable {
-		List<WsdlProjectPro> projects = projectMap.get(clazz);
-		for (WsdlProjectPro wsdlProjectPro : projects) {
+		List<WsdlProject> projects = projectMap.get(clazz);
+		for (WsdlProject wsdlProjectPro : projects) {
 			SoapUiSpringTestUtils.setWsdlProjectProProperties(wsdlProjectPro, properties);
 		}
 		//	WsdlProjectPro project = projectMap.get(clazz);

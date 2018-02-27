@@ -11,7 +11,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.smartbear.soapui.spring.example.ExistingProjectSoapUiTestClass;
 
 public class SoapUiSpringTestUtilsTest {
@@ -37,13 +37,13 @@ public class SoapUiSpringTestUtilsTest {
 
 	@Test
 	public void check_createWsdlProjectPro_existingProject() {
-		List<WsdlProjectPro> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
+		List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
 		assertThat(projects).isNotEmpty();
 	}
 
 	@Test
 	public void check_getSoapUiTestCases() {
-		List<WsdlProjectPro> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
+		List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
 		assertThat(projects).isNotEmpty();
 		List<SoapUiTestCase> testCases = SoapUiSpringTestUtils.getSoapUiTestCases(projects.get(0));
 		assertThat(testCases).isNotEmpty();
@@ -51,7 +51,7 @@ public class SoapUiSpringTestUtilsTest {
 
 	@Test
 	public void check_setWsdlProjectProProperties() {
-		WsdlProjectPro projectMock = Mockito.mock(WsdlProjectPro.class);
+		WsdlProject projectMock = Mockito.mock(WsdlProject.class);
 		Map<String, String> properties = new HashMap<String, String>();
 		properties.put("property1", "value1");
 		properties.put("property2", "value2");

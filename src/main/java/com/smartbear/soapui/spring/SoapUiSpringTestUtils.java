@@ -9,7 +9,7 @@ import org.apache.ws.security.util.UUIDGenerator;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
-import com.eviware.soapui.impl.wsdl.WsdlProjectPro;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
@@ -22,12 +22,12 @@ public class SoapUiSpringTestUtils {
 
 	public static WorkspaceImpl workspace = null;
 
-	public static List<WsdlProjectPro> createWsdlProjectPro(Class<?> klass) {
+	public static List<WsdlProject> createWsdlProjectPro(Class<?> klass) {
 		List<File> projectFiles = getProjectFiles(klass);
 		WorkspaceImpl workspace = getWorkspace();
-		List<WsdlProjectPro> wdslProjects = Lists.newArrayList();
+		List<WsdlProject> wdslProjects = Lists.newArrayList();
 		for (File projectFile : projectFiles) {
-			WsdlProjectPro project = new WsdlProjectPro(projectFile.getAbsolutePath(), workspace);
+			WsdlProject project = new WsdlProject(projectFile.getAbsolutePath(), workspace);
 			@SuppressWarnings("unchecked")
 			List<Project> projectList = (List<Project>) workspace.getProjectList();
 			projectList.add(project);
@@ -51,7 +51,7 @@ public class SoapUiSpringTestUtils {
 		return workspace;
 	}
 
-	public static List<SoapUiTestCase> getSoapUiTestCases(WsdlProjectPro project) {
+	public static List<SoapUiTestCase> getSoapUiTestCases(WsdlProject project) {
 
 		List<SoapUiTestCase> suite = new ArrayList<SoapUiTestCase>();
 
@@ -67,7 +67,7 @@ public class SoapUiSpringTestUtils {
 		return suite;
 	}
 
-	public static void setWsdlProjectProProperties(WsdlProjectPro project, Map<String, String> properties) {
+	public static void setWsdlProjectProProperties(WsdlProject project, Map<String, String> properties) {
 		for (String key : properties.keySet()) {
 			project.setPropertyValue(key, properties.get(key));
 		}
