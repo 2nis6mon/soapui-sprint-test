@@ -26,31 +26,31 @@ public class SoapUiSpringTestUtilsTest {
 	}
 
 	@Test(expected = SoapUiSpringTestException.class)
-	public void check_createWsdlProjectPro_withoutAnnotationClass() {
-		SoapUiSpringTestUtils.createWsdlProjectPro(WithoutSoapUiProjectSoapUiTestClass.class);
+	public void check_createWsdlProject_withoutAnnotationClass() {
+		SoapUiSpringTestUtils.createWsdlProject(WithoutSoapUiProjectSoapUiTestClass.class);
 	}
 
 	@Test(expected = SoapUiSpringTestException.class)
-	public void check_createWsdlProjectPro_fileNotFound() {
-		SoapUiSpringTestUtils.createWsdlProjectPro(NotExistingProjectSoapUiTestClass.class);
+	public void check_createWsdlProject_fileNotFound() {
+		SoapUiSpringTestUtils.createWsdlProject(NotExistingProjectSoapUiTestClass.class);
 	}
 
 	@Test
-	public void check_createWsdlProjectPro_existingProject() {
-		List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
+	public void check_createWsdlProject_existingProject() {
+		List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProject(ExistingProjectSoapUiTestClass.class);
 		assertThat(projects).isNotEmpty();
 	}
 
 	@Test
 	public void check_getSoapUiTestCases() {
-		List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProjectPro(ExistingProjectSoapUiTestClass.class);
+		List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProject(ExistingProjectSoapUiTestClass.class);
 		assertThat(projects).isNotEmpty();
 		List<SoapUiTestCase> testCases = SoapUiSpringTestUtils.getSoapUiTestCases(projects.get(0));
 		assertThat(testCases).isNotEmpty();
 	}
 
 	@Test
-	public void check_setWsdlProjectProProperties() {
+	public void check_setWsdlProjectProperties() {
 		WsdlProject projectMock = Mockito.mock(WsdlProject.class);
 		Map<String, String> properties = new HashMap<String, String>();
 		properties.put("property1", "value1");

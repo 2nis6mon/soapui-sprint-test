@@ -22,7 +22,7 @@ public class SoapUiSpringTestUtils {
 
 	public static WorkspaceImpl workspace = null;
 
-	public static List<WsdlProject> createWsdlProjectPro(Class<?> klass) {
+	public static List<WsdlProject> createWsdlProject(Class<?> klass) {
 		List<File> projectFiles = getProjectFiles(klass);
 		WorkspaceImpl workspace = getWorkspace();
 		List<WsdlProject> wdslProjects = Lists.newArrayList();

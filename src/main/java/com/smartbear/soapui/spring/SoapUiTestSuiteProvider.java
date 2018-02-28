@@ -37,7 +37,7 @@ public class SoapUiTestSuiteProvider {
 
 	public SoapUiTestSuiteProvider(Class<? extends SoapUiSpringTest> clazz) {
 		try {
-			List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProjectPro(clazz);
+			List<WsdlProject> projects = SoapUiSpringTestUtils.createWsdlProject(clazz);
 
 			List<SoapUiTestCase> reallyAllTests = Lists.newArrayList();
 			for (WsdlProject wsdlProjectPro : projects) {
